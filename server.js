@@ -3,7 +3,7 @@ import express from 'express';
 import http from 'http';
 import path from 'path';
 import { Server } from 'socket.io';
-import ACTIONS from './src/actions.js'; // Note the '.js' extension in ES Modules
+import ACTIONS from './src/Actions.js'; // Note the '.js' extension in ES Modules
 
 // Create the express app
 const app = express();
