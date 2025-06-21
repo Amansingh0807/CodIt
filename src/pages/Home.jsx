@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const Home = () => {
             <div className="formWrapper">
                 <img
                     className="homePageLogo"
-                    src="/code-sync.png"
+                    src="/logo-codit.png"
                     alt="code-sync-logo"
                 />
                 <h4 className="mainLabel">Paste invitation ROOM ID</h4>
@@ -64,7 +64,7 @@ const Home = () => {
                         Join
                     </button>
                     <span className="createInfo">
-                        If you don't have an invite then create &nbsp;
+                        If you don&apos;t have an invite then create &nbsp;
                         <a
                             onClick={createNewRoom}
                             href=""

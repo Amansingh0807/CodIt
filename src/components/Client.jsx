@@ -1,5 +1,5 @@
-import React from 'react';
 import Avatar from 'react-avatar';
+import PropTypes from 'prop-types';
 
 const Client = ({ username }) => {
     return (
@@ -8,6 +8,10 @@ const Client = ({ username }) => {
             <span className="userName">{username}</span>
         </div>
     );
+};
+
+Client.propTypes = {
+    username: PropTypes.string.isRequired,
 };
 
 export default Client;

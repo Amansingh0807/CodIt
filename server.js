@@ -2,8 +2,9 @@
 import express from 'express';
 import http from 'http';
 import path from 'path';
+import process from 'process';
 import { Server } from 'socket.io';
-import ACTIONS from './src/Actions.js'; // Note the '.js' extension in ES Modules
+import ACTIONS from './src/actions.js'; // Note the '.js' extension in ES Modules
 
 // Create the express app
 const app = express();
@@ -18,8 +19,8 @@ const io = new Server(server);
 app.use(express.static('build'));
 
 // Fallback to 'index.html' for any other routes
-app.use((req, res, next) => {
-    res.sendFile(path.join(process.cwd(), 'build', 'index.html'));
+app.use((req, res) => {
+    res.sendFile(path.join(path.resolve(), 'build', 'index.html'));
 });
 
 // Map to track users and their associated socket IDs
