@@ -1,0 +1,48 @@
+.canvas {
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    cursor: crosshair;
+    touch-action: none; /* Prevent touch scrolling */
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+}
+
+.color-picker input {
+    width: 50px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+}
+
+.brush-size {
+    margin-left: 20px;
+}
+
+.brush-size label {
+    margin-right: 5px;
+}
+
+.button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}

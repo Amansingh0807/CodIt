@@ -1,15 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import ACTIONS from '../actions';
+import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
-import {
-    useLocation,
-    useNavigate,
-    Navigate,
-    useParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const EditorPage = () => {
     const socketRef = useRef(null);
@@ -17,6 +12,12 @@ const EditorPage = () => {
     const location = useLocation();
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
+    // Resolve username from location state or session storage, fallback to a guest tag
+    const username = (location.state && location.state.username) || sessionStorage.getItem('username') || `Guest-${Math.random().toString(36).slice(2, 6)}`;
+    // Persist for refresh/direct link
+    if (!sessionStorage.getItem('username')) {
+        sessionStorage.setItem('username', username);
+    }
     const [clients, setClients] = useState([]);
 
     useEffect(() => {
@@ -33,16 +34,16 @@ const EditorPage = () => {
 
             socketRef.current.emit(ACTIONS.JOIN, {
                 roomId,
-                username: location.state?.username,
+                username,
             });
 
             // Listening for joined event
             socketRef.current.on(
                 ACTIONS.JOINED,
-                ({ clients, username, socketId }) => {
-                    if (username !== location.state?.username) {
-                        toast.success(`${username} joined the room.`);
-                        console.log(`${username} joined`);
+                ({ clients, username: joinedName, socketId }) => {
+                    if (joinedName !== username) {
+                        toast.success(`${joinedName} joined the room.`);
+                        console.log(`${joinedName} joined`);
                     }
                     setClients(clients);
                     socketRef.current.emit(ACTIONS.SYNC_CODE, {
@@ -71,7 +72,7 @@ const EditorPage = () => {
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
         };
-    }, []);
+    }, [roomId, username, reactNavigator]);
 
     async function copyRoomId() {
         try {
@@ -87,9 +88,7 @@ const EditorPage = () => {
         reactNavigator('/');
     }
 
-    if (!location.state) {
-        return <Navigate to="/" />;
-    }
+    // Don't redirect if state is missing; we allow guest/session usernames
 
     return (
         <div className="mainWrap">
@@ -120,13 +119,18 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
-                <Editor
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    onCodeChange={(code) => {
-                        codeRef.current = code;
-                    }}
-                />
+                {socketRef.current ? (
+                    <Editor
+                        key={roomId}
+                        socketRef={socketRef}
+                        roomId={roomId}
+                        onCodeChange={(code) => {
+                            codeRef.current = code;
+                        }}
+                    />
+                ) : (
+                    <div style={{ color: '#fff', padding: 16 }}>Connecting…</div>
+                )}
             </div>
         </div>
     );
